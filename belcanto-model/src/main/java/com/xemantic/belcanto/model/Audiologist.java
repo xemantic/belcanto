@@ -1,7 +1,6 @@
 package com.xemantic.belcanto.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Audiologist.
@@ -11,4 +10,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "AUDIOLOGIST")
 public class Audiologist extends Person {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
 }

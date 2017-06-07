@@ -1,7 +1,6 @@
 package com.xemantic.belcanto.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Represents abstract party.
@@ -10,7 +9,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "APPOINTMENT")
-public class Person implements Party {
+public abstract class Person implements Party {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
   private String name;
 
