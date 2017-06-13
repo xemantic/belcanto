@@ -2,7 +2,7 @@
 
 # About this project
 
-This project was created to explores possibilities of building
+I created this project to gain more knowledge on building
 Model Driven Applications with support of [spring-boot](https://projects.spring.io/spring-boot/)
 and [spring-data-rest](http://projects.spring.io/spring-data-rest/) projects.
 I had prior experience using this stack for read-only APIs. This one is providing
