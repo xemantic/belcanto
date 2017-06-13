@@ -1,6 +1,7 @@
 package com.xemantic.belcanto.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * An appointment with the {@link Customer}.
@@ -8,15 +9,15 @@ import javax.persistence.*;
  * @author morisil
  */
 @Entity
-@Table(name = "APPOINTMENT")
 public class Appointment {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue
   private long id;
 
-  @OneToOne
-  private Rating rating;
+  private LocalDateTime time;
+
+  private Integer rating;
 
   public long getId() {
     return id;
@@ -26,11 +27,19 @@ public class Appointment {
     this.id = id;
   }
 
-  public Rating getRating() {
+  public LocalDateTime getTime() {
+    return time;
+  }
+
+  public void setTime(LocalDateTime time) {
+    this.time = time;
+  }
+
+  public int getRating() {
     return rating;
   }
 
-  public void setRating(Rating rating) {
+  public void setRating(int rating) {
     this.rating = rating;
   }
 

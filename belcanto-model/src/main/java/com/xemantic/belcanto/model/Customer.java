@@ -1,6 +1,7 @@
 package com.xemantic.belcanto.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Customer.
@@ -8,19 +9,28 @@ import javax.persistence.*;
  * @author morisil
  */
 @Entity
-@Table(name = "CUSTOMER")
 public class Customer extends Person {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  @OneToOne
+  @JoinColumn(name = "specialist_id")
+  private Specialist specialist;
 
-  public long getId() {
-    return id;
+  private List<Appointment> appointments;
+
+  public Specialist getSpecialist() {
+    return specialist;
   }
 
-  public void setId(long id) {
-    this.id = id;
+  public void setSpecialist(Specialist specialist) {
+    this.specialist = specialist;
+  }
+
+  public List<Appointment> getAppointments() {
+    return appointments;
+  }
+
+  public void setAppointments(List<Appointment> appointments) {
+    this.appointments = appointments;
   }
 
 }

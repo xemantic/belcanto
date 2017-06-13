@@ -1,15 +1,15 @@
 package com.xemantic.belcanto.model;
 
 /**
- * Test of the {@link Customer} entity.
+ * Test of the {@link Specialist}.
  *
  * @author morisil
  */
-public class CustomerTest extends PersonTest {
+public class SpecialistTest extends PersonTest {
 
   @Override
   protected Person newPerson() {
-    return new Customer();
+    return new Specialist();
   }
 
 }
