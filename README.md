@@ -35,6 +35,9 @@ The [UseCasesTest](belcanto-service/src/test/groovy/com/xemantic/belcanto/servic
 should be self explanatory, also as a starting point for defining project requirements
 and following Test Driven Development. Next to it each REST resource should be covered
 with own set of CRUD integration tests.
+See the
+[com.xemantic.belcanto.service](belcanto-service/src/test/groovy/com/xemantic/belcanto/service)
+test package for details.
 
 ## HAL browser - generic UI
 
