@@ -15,6 +15,7 @@ public class Customer extends Person {
   @JoinColumn(name = "specialist_id")
   private Specialist specialist;
 
+  @OneToMany
   private List<Appointment> appointments;
 
   public Specialist getSpecialist() {
