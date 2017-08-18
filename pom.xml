@@ -40,8 +40,8 @@
       release cycle. In order to use the most recent version, including service updates,
       this property needs to be set.
      -->
-    <spring-data-releasetrain.version>Ingalls-SR3</spring-data-releasetrain.version>
-    <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
+    <spring-data-releasetrain.version>Ingalls-SR6</spring-data-releasetrain.version>
+    <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
   </properties>
 
   <modules>
@@ -89,6 +89,16 @@
         <type>pom</type>
         <version>${spring-boot.version}</version>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- other runtime and test dependencies -->
