@@ -26,8 +26,8 @@ import com.xemantic.belcanto.service.repository.SpecialistRepository
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
-import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.junit4.rules.SpringClassRule
 import org.springframework.test.context.junit4.rules.SpringMethodRule
 

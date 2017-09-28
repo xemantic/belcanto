@@ -26,20 +26,16 @@ import com.xemantic.belcanto.service.repository.CustomerRepository
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
-import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.junit4.rules.SpringClassRule
 import org.springframework.test.context.junit4.rules.SpringMethodRule
 
 import javax.inject.Inject
-import java.time.LocalDate
 
 import static io.restassured.RestAssured.given
 import static com.xemantic.belcanto.service.BelcantoTests.jsonEquals
-import static org.hamcrest.Matchers.empty
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.not
-import static org.junit.Assert.assertThat
+import static org.assertj.core.api.Assertions.assertThat
 
 /**
  * Test of the {@code /customers} endpoint.
@@ -83,10 +79,13 @@ class CustomerRestResourceTest {
 
     // then
     Long customerId = BelcantoTests.extractId(customerLink)
-    Customer customer = customerRepository.findOne(customerId)
-    assertThat(customer.getName(), is('John'))
-    assertThat(customer.getSurname(), is('Smith'))
-    assertThat(customer.getBirthDate(), is(LocalDate.parse('1981-12-18')))
+    assertThat(customerRepository.findById(customerId))
+        .isPresent()
+        .hasValueSatisfying { customer ->
+            assertThat(customer.name).isEqualTo('John')
+            assertThat(customer.surname).isEqualTo('Smith')
+            assertThat(customer.birthDate).isEqualTo('1981-12-18')
+      }
   }
 
   @Test
@@ -114,12 +113,17 @@ class CustomerRestResourceTest {
 
     // then
     Long customerId = BelcantoTests.extractId(customerLink)
-    Customer customer = customerRepository.findOne(customerId)
-    assertThat(customer.getName(), is('John'))
-    assertThat(customer.getSurname(), is('Smith'))
-    def addresses = customer.getAddresses()
-    assertThat(addresses, not(empty()))
-    assertThat(addresses.iterator().next().getStreet(), is('Somewhere'))
+    assertThat(customerRepository.findById(customerId))
+        .isPresent()
+        .hasValueSatisfying { customer ->
+            assertThat(customer.name).isEqualTo('John')
+            assertThat(customer.surname).isEqualTo('Smith')
+            assertThat(customer.addresses)
+                .hasSize(1)
+                .hasOnlyOneElementSatisfying { address ->
+                    assertThat(address.street).isEqualTo('Somewhere')
+                }
+        }
   }
 
   @Test

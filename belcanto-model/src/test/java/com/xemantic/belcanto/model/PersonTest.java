@@ -28,8 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Abstract test of the {@link Person} entity.
@@ -52,7 +51,7 @@ public abstract class PersonTest {
     String displayName = person.getDisplayName();
 
     // then
-    assertThat(displayName, is("John Smith"));
+    assertThat(displayName).isEqualTo("John Smith");
   }
 
   @Test
@@ -67,7 +66,7 @@ public abstract class PersonTest {
     Optional<Address> address = person.getPrimaryAddress();
 
     // then
-    assertThat(address.isPresent(), is(false));
+    assertThat(address).isNotPresent();
   }
 
   @Test
@@ -85,7 +84,9 @@ public abstract class PersonTest {
     Optional<Address> result = person.getPrimaryAddress();
 
     // then
-    assertThat(result.get().getStreet(), is("foo"));
+    assertThat(result).isPresent().hasValueSatisfying(a ->
+        assertThat(a.getStreet()).isEqualTo("foo")
+    );
   }
 
   @Test
@@ -106,7 +107,9 @@ public abstract class PersonTest {
     Optional<Address> result = person.getPrimaryAddress();
 
     // then
-    assertThat(result.get().getStreet(), is("bar"));
+    assertThat(result).isPresent().hasValueSatisfying(a ->
+        assertThat(a.getStreet()).isEqualTo("bar")
+    );
   }
 
   protected abstract Person newPerson();
