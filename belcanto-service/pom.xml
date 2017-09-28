@@ -60,6 +60,11 @@
       <artifactId>spring-boot-starter-undertow</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.reactivex.rxjava2</groupId>
+      <artifactId>rxjava</artifactId>
+    </dependency>
+
     <!--
       in memory DB can be used only for integration tests and replaced with
       another database on production.
