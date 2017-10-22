@@ -34,13 +34,13 @@ import static BelcantoTests.jsonEquals
 import static io.restassured.RestAssured.given
 
 /**
- * Integration test containing main use cases.
+ * Test of API use cases.
  *
  * @author morisil
  */
 @RunWith(SpringRunner.class)
 @BelcantoTest
-class UseCasesTest {
+class ApiUseCasesTest {
 
   @Inject @Rule public BelcantoTestContext context
 

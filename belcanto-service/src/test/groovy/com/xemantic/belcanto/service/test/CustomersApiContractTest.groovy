@@ -35,13 +35,13 @@ import static io.restassured.RestAssured.given
 import static org.assertj.core.api.Assertions.assertThat
 
 /**
- * Test of the {@code /customers} endpoint.
+ * API contract test of the {@code /customers} endpoint.
  *
  * @author morisil
  */
 @RunWith(SpringRunner)
 @BelcantoTest
-class CustomerRestResourceTest {
+class CustomersApiContractTest {
 
   @Inject @Rule public BelcantoTestContext context
 
