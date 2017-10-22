@@ -19,49 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.xemantic.belcanto.service
+package com.xemantic.belcanto.service.test
 
 import com.xemantic.belcanto.model.Specialist
-import com.xemantic.belcanto.service.repository.SpecialistRepository
-import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.test.context.junit4.rules.SpringClassRule
-import org.springframework.test.context.junit4.rules.SpringMethodRule
+import org.junit.runner.RunWith
+import org.springframework.test.context.junit4.SpringRunner
 
 import javax.inject.Inject
 import java.time.LocalDate
 
+import static BelcantoTests.jsonEquals
 import static io.restassured.RestAssured.given
-import static com.xemantic.belcanto.service.BelcantoTests.jsonEquals
 
 /**
  * Integration test containing main use cases.
  *
  * @author morisil
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner.class)
+@BelcantoTest
 class UseCasesTest {
 
-  @ClassRule
-  public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule()
-
-  @Rule
-  public final SpringMethodRule springMethodRule = new SpringMethodRule()
-
-  @Inject
-  SpecialistRepository specialistRepository
-
-  @LocalServerPort
-  int port
+  @Inject @Rule public BelcantoTestContext context
 
   @Test
   void createCustomer_forExistingSpecialist_shouldAssociateNewCustomerWithTheSpecialist() {
     // given
     // db state
-    def specialist = specialistRepository.save(
+    def specialist = context.populate(
         new Specialist( // convenient way of populating DB state with Groovy
             name: 'Max',
             surname: 'Mustermann',
@@ -71,7 +58,6 @@ class UseCasesTest {
 
     // create customer
     String customerLink = given()
-        .port(port)
         .contentType('application/json')
         .body('''
         {
@@ -80,21 +66,24 @@ class UseCasesTest {
           "birthDate": "1976-11-23"
         }
         ''')
-    .when()
+
+        .when()
         .post('/customers')
-    .then()
+
+        .then()
         .statusCode(201) // created
-    .extract()
+        .extract()
         .path('_links.self.href')
 
     // associate customer with specialist
     given()
-        .port(port)
         .contentType('text/uri-list')
         .body(customerLink)
-    .when()
+
+        .when()
         .post("/specialists/${specialist.id}/customers")
-    .then()
+
+        .then()
         .statusCode(204) // saved
 
     // then
@@ -102,10 +91,11 @@ class UseCasesTest {
     Long customerId = BelcantoTests.extractId(customerLink)
 
     given()
-        .port(port)
-    .when()
+
+        .when()
         .get("/specialists/${specialist.id}/customers")
-    .then()
+
+        .then()
         .statusCode(200)
         .content(jsonEquals("""
         {"_embedded" : {
@@ -118,20 +108,20 @@ class UseCasesTest {
               "displayName" : "John Smith",
               "_links" : {
                 "self" : {
-                  "href" : "http://localhost:${port}/customers/${customerId}"
+                  "href" : "http://localhost:${context.port}/customers/${customerId}"
                 },
                 "customer" : {
-                  "href" : "http://localhost:${port}/customers/${customerId}"
+                  "href" : "http://localhost:${context.port}/customers/${customerId}"
                 },
                 "specialist" : {
-                  "href" : "http://localhost:${port}/customers/${customerId}/specialist"
+                  "href" : "http://localhost:${context.port}/customers/${customerId}/specialist"
                 }
               }
             } ]
           },
           "_links" : {
             "self" : {
-              "href" : "http://localhost:${port}/specialists/${specialist.id}/customers"
+              "href" : "http://localhost:${context.port}/specialists/${specialist.id}/customers"
             }
           }
         }

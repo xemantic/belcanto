@@ -19,27 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.xemantic.belcanto.service;
+package com.xemantic.belcanto.service.test;
 
-import net.javacrumbs.jsonunit.ConfigurableJsonMatcher;
-import net.javacrumbs.jsonunit.JsonMatchers;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Test utilities for this project.
+ * Meta annotation defining API contract test for this project.
  *
  * @author morisil
  */
-public final class BelcantoTests {
-
-  private BelcantoTests() { /* util-class, non-instantiable */ }
-
-  public static Long extractId(String link) {
-    return Long.valueOf(link.substring(link.lastIndexOf('/') + 1));
-  }
-
-  @SuppressWarnings("RedundantStringToString")
-  public static <T> ConfigurableJsonMatcher<T> jsonEquals(String expected) {
-    return JsonMatchers.jsonEquals(expected.toString()); // we need to sanitize the GString
-  }
-
-}
+@Retention(RetentionPolicy.RUNTIME)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Inherited
+public @interface BelcantoTest { /* no implementation needed */ }

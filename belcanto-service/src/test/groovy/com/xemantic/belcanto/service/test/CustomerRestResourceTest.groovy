@@ -19,22 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.xemantic.belcanto.service
+package com.xemantic.belcanto.service.test
 
 import com.xemantic.belcanto.model.Customer
 import com.xemantic.belcanto.service.repository.CustomerRepository
-import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.test.context.junit4.rules.SpringClassRule
-import org.springframework.test.context.junit4.rules.SpringMethodRule
+import org.junit.runner.RunWith
+import org.springframework.test.context.junit4.SpringRunner
 
 import javax.inject.Inject
 
+import static BelcantoTests.jsonEquals
 import static io.restassured.RestAssured.given
-import static com.xemantic.belcanto.service.BelcantoTests.jsonEquals
 import static org.assertj.core.api.Assertions.assertThat
 
 /**
@@ -42,26 +39,17 @@ import static org.assertj.core.api.Assertions.assertThat
  *
  * @author morisil
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner)
+@BelcantoTest
 class CustomerRestResourceTest {
 
-  @ClassRule
-  public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule()
+  @Inject @Rule public BelcantoTestContext context
 
-  @Rule
-  public final SpringMethodRule springMethodRule = new SpringMethodRule()
-
-  @Inject
-  CustomerRepository customerRepository
-
-  @LocalServerPort
-  int port
-
+  @Inject CustomerRepository customerRepository
 
   @Test
   void createCustomer_validCustomerDataSupplied_shouldWriteCustomerInDb() {
     String customerLink = given()
-        .port(port)
         .contentType('application/json')
         .body('''
         {
@@ -70,11 +58,13 @@ class CustomerRestResourceTest {
           "birthDate": "1981-12-18T00:00"
         }
         ''')
-    .when()
+
+        .when()
         .post('/customers')
-    .then()
+
+        .then()
         .statusCode(201) // created
-    .extract()
+        .extract()
         .path('_links.self.href')
 
     // then
@@ -85,13 +75,12 @@ class CustomerRestResourceTest {
             assertThat(customer.name).isEqualTo('John')
             assertThat(customer.surname).isEqualTo('Smith')
             assertThat(customer.birthDate).isEqualTo('1981-12-18')
-      }
+        }
   }
 
   @Test
   void createCustomer_withEmbeddedAddress_shouldWriteCustomerAndAddressInDb() {
     String customerLink = given()
-        .port(port)
         .contentType('application/json')
         .body('''
         {
@@ -104,11 +93,13 @@ class CustomerRestResourceTest {
           ]
         }
         ''')
-    .when()
+
+        .when()
         .post('/customers')
-    .then()
+
+        .then()
         .statusCode(201) // created
-    .extract()
+        .extract()
         .path('_links.self.href')
 
     // then
@@ -131,10 +122,11 @@ class CustomerRestResourceTest {
     // given
     long nonExistentId = 42L
     given()
-        .port(port)
-    .when()
+
+        .when()
         .get("/customers/${nonExistentId}")
-    .then()
+
+        .then()
         .statusCode(404) // not found
   }
 
@@ -142,17 +134,18 @@ class CustomerRestResourceTest {
   void readCustomer_existentId_shouldReturnCustomerData() {
     // given
     // db state
-    def customer = customerRepository.save(
+    def customer = context.populate(
         new Customer( // convenient way of populating DB state with Groovy
             name: 'John',
             surname: 'Smith'
         )
     )
     given()
-        .port(port)
-    .when()
+
+        .when()
         .get("/customers/${customer.id}")
-    .then()
+
+        .then()
         .statusCode(200)
         .content(jsonEquals("""
         {
@@ -164,13 +157,13 @@ class CustomerRestResourceTest {
           "displayName" : "John Smith",
           "_links" : {
             "self" : {
-              "href" : "http://localhost:${port}/customers/${customer.id}"
+              "href" : "http://localhost:${context.port}/customers/${customer.id}"
             },
             "customer" : {
-              "href" : "http://localhost:${port}/customers/${customer.id}"
+              "href" : "http://localhost:${context.port}/customers/${customer.id}"
             },
             "specialist" : {
-              "href" : "http://localhost:${port}/customers/${customer.id}/specialist"
+              "href" : "http://localhost:${context.port}/customers/${customer.id}/specialist"
             }
           }
         }
