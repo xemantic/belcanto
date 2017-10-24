@@ -38,7 +38,7 @@ import static io.restassured.RestAssured.given
  *
  * @author morisil
  */
-@RunWith(SpringRunner.class)
+@RunWith(SpringRunner)
 @BelcantoTest
 class ApiUseCasesTest {
 
