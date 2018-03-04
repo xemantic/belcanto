@@ -141,9 +141,33 @@
         <configuration>
           <failIfNoTests>true</failIfNoTests>
           <includes>
-            <include>**/*Test*.*</include><!-- will include also groovy tests -->
+            <include>**/*Test.*</include><!-- will include also groovy tests -->
           </includes>
+          <excludes>
+            <exclude>**/*ApiContractTest.*</exclude>
+            <exclude>**/*IntegrationTest.*</exclude>
+          </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <failIfNoTests>true</failIfNoTests>
+          <includes>
+            <include>**/*ApiContractTest.*</include><!-- will include also groovy tests -->
+            <include>**/*IntegrationTest.*</include>
+          </includes>
+          <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

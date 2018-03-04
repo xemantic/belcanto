@@ -40,7 +40,7 @@ import static io.restassured.RestAssured.given
  */
 @RunWith(SpringRunner)
 @BelcantoTest
-class ApiUseCasesTest {
+class ApiUseCasesApiContractTest {
 
   @Inject @Rule public BelcantoTestContext context
 
